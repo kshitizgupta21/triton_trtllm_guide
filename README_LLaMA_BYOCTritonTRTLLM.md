@@ -71,7 +71,7 @@ Mandatory ones are
 
 #### Run the following command to prepare preprocessing config.pbtxt
 ```
-python3 tools/fill_template.py -i llama_ifb/preprocessing/config.pbtxt tokenizer_dir:${HF_LLAMA_MODEL},tokenizer_type:llama,triton_max_batch_size:64,preprocessing_instance_count:1
+python3 tools/fill_template.py -i triton_model_repo/preprocessing/config.pbtxt tokenizer_dir:${HF_LLAMA_MODEL},tokenizer_type:llama,triton_max_batch_size:64,preprocessing_instance_count:1
 ```
 
 
@@ -101,7 +101,7 @@ Optional
 #### Run the following command to prepare tensorrt_llm model config.pbtxt
 
 ```
-python3 tools/fill_template.py -i llama_ifb/tensorrt_llm/config.pbtxt triton_max_batch_size:64,decoupled_mode:False,max_beam_width:1,engine_dir:/tmp/llama/7B/trt_engines/fp16/4-gpu/,max_tokens_in_paged_kv_cache:2560,max_attention_window_size:2560,kv_cache_free_gpu_mem_fraction:0.5,exclude_input_in_output:True,enable_kv_cache_reuse:False,batching_strategy:inflight_batching,max_queue_delay_microseconds:600
+python3 tools/fill_template.py -i triton_model_repo/tensorrt_llm/config.pbtxt triton_max_batch_size:64,decoupled_mode:False,max_beam_width:1,engine_dir:/tmp/llama/7B/trt_engines/fp16/4-gpu/,max_tokens_in_paged_kv_cache:2560,max_attention_window_size:2560,kv_cache_free_gpu_mem_fraction:0.5,exclude_input_in_output:True,enable_kv_cache_reuse:False,batching_strategy:inflight_batching,max_queue_delay_microseconds:600
 ```
 
 *triton_model_repo/postprocessing/config.pbtxt*
@@ -116,7 +116,7 @@ Mandatory ones are
 
 #### Run the following command to prepare postprocessing config.pbtxt
 ```
-python3 tools/fill_template.py -i llama_ifb/postprocessing/config.pbtxt tokenizer_dir:${HF_LLAMA_MODEL},tokenizer_type:llama,triton_max_batch_size:64,postprocessing_instance_count:1
+python3 tools/fill_template.py -i triton_model_repo/postprocessing/config.pbtxt tokenizer_dir:${HF_LLAMA_MODEL},tokenizer_type:llama,triton_max_batch_size:64,postprocessing_instance_count:1
 ```
 
 *triton_model_repo/ensemble/config.pbtxt*
@@ -127,7 +127,7 @@ python3 tools/fill_template.py -i llama_ifb/postprocessing/config.pbtxt tokenize
 
 #### Run the following command to prepare ensemble config.pbtxt
 ```
-python3 tools/fill_template.py -i llama_ifb/ensemble/config.pbtxt triton_max_batch_size:64
+python3 tools/fill_template.py -i triton_model_repo/ensemble/config.pbtxt triton_max_batch_size:64
 ```
 
 ### 7. Launch Triton server
