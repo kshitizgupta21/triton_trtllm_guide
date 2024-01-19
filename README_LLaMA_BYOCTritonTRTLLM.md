@@ -37,7 +37,7 @@ python build.py --model_dir ${HF_LLAMA_MODEL} \
                 --use_gemm_plugin float16 \
                 --output_dir /tmp/llama/7B/trt_engines/fp16/4-gpu/ \
                 --paged_kv_cache \
-                --max_batch_size 64
+                --max_batch_size 64 \
                 --world_size 4 \
                 --tp_size 4 \
                 --pp_size 1
@@ -46,7 +46,7 @@ python build.py --model_dir ${HF_LLAMA_MODEL} \
 ### 5. Create model repository
 ```
 # Create the model repository that will be used by the Triton server
-cd /workspace/tensorrtllm_backend
+cd /workspace
 mkdir triton_model_repo
 
 # Copy the example models to the model repository
@@ -135,7 +135,7 @@ python3 tools/fill_template.py -i triton_model_repo/ensemble/config.pbtxt triton
 Run this command to launch Triton server. Set `--world_size` = number of GPUs aka TP degree.
 
 ```
-python3 scripts/launch_triton_server.py --world_size=4 --model_repo=/workspace/tensorrtllm_backend/triton_model_repo
+python3 scripts/launch_triton_server.py --world_size=4 --model_repo=/workspace/triton_model_repo
 ```
 
 ### 8. Query the server with the Triton generate endpoint
