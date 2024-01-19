@@ -28,14 +28,14 @@ git lfs install
 git clone https://huggingface.co/meta-llama/Llama-2-7b-hf
 
 # Build TensorRT engines
-export HF_LLAMA_MODEL=Llama-2-7b-hf/
+export HF_LLAMA_MODEL=$(pwd)/Llama-2-7b-hf/
 python build.py --model_dir ${HF_LLAMA_MODEL} \
                 --dtype float16 \
                 --remove_input_padding \
                 --use_gpt_attention_plugin float16 \
                 --enable_context_fmha \
                 --use_gemm_plugin float16 \
-                --output_dir /tmp/llama/7B/trt_engines/fp16/1-gpu/ \
+                --output_dir /tmp/llama/7B/trt_engines/fp16/4-gpu/ \
                 --paged_kv_cache \
                 --max_batch_size 64
                 --world_size 4 \
@@ -54,8 +54,6 @@ cp -r all_models/inflight_batcher_llm/ensemble triton_model_repo/
 cp -r all_models/inflight_batcher_llm/preprocessing triton_model_repo/
 cp -r all_models/inflight_batcher_llm/postprocessing triton_model_repo/
 cp -r all_models/inflight_batcher_llm/tensorrt_llm triton_model_repo/
-
-# Prepare configs
 ```
 
 ### 6. Modify the model configuration
@@ -66,9 +64,9 @@ The following table shows the fields that need to be modified before deployment:
 Mandatory ones are
 | Name | Description
 | :----------------------: | :-----------------------------: |
-| `triton_max_batch_size` | Here setting to 4 |
-| `tokenizer_dir` | The path to the tokenizer for the model. In this example, the path should be set to `/workspace/tensorrtllm_backend/tensorrt_llm/examples/gpt/gpt2`|
-| `tokenizer_type` | The type of the tokenizer for the model, `t5`, `auto` and `llama` are supported. In this example, the type should be set to `auto` |
+| `triton_max_batch_size` | Here setting to 64 |
+| `tokenizer_dir` | The path to the tokenizer for the model. In this example, the path should be set to `${HF_LLAMA_MODEL}`|
+| `tokenizer_type` | The type of the tokenizer for the model, `t5`, `auto` and `llama` are supported. In this example, the type should be set to `llama` |
 | `preprocessing_instance_count` | Here setting to 1 |
 
 #### Run the following command to prepare preprocessing config.pbtxt
@@ -82,11 +80,11 @@ python3 tools/fill_template.py -i llama_ifb/preprocessing/config.pbtxt tokenizer
 Mandatory ones are
 | Name | Description
 | :----------------------: | :-----------------------------: |
-| `triton_max_batch_size` | Here setting to 4 |
-| `max_queue_delay_microseconds` | Here setting to 100 |
+| `triton_max_batch_size` | Here setting to 64 |
+| `max_queue_delay_microseconds` | Here setting to 600 |
 | `decoupled` | Controls streaming. Decoupled mode must be set to `True` if using the streaming option from the client. |
 | `gpt_model_type` | Set to `inflight_fused_batching` when enabling in-flight batching support. To disable in-flight batching, set to `V1` |
-| `gpt_model_path` | Path to the TensorRT-LLM engines for deployment. In this example, the path should be set to `/workspace/tensorrtllm_backend/triton_model_repo/tensorrt_llm/1` as the tensorrtllm_backend directory will be mounted to `/tensorrtllm_backend` within the container |
+| `gpt_model_path` | Path to the TensorRT-LLM engines for deployment. In this example, the path should be set to `/tmp/llama/7B/trt_engines/fp16/4-gpu/` |
 
 Optional
 | Name | Description
@@ -111,9 +109,9 @@ python3 tools/fill_template.py -i llama_ifb/tensorrt_llm/config.pbtxt triton_max
 Mandatory ones are
 | Name | Description
 | :----------------------: | :-----------------------------: |
-| `triton_max_batch_size` | Here setting to 4 |
-| `tokenizer_dir` | The path to the tokenizer for the model. In this example, the path should be set to `/workspace/tensorrtllm_backend/tensorrt_llm/examples/gpt/gpt2`|
-| `tokenizer_type` | The type of the tokenizer for the model, `t5`, `auto` and `llama` are supported. In this example, the type should be set to `auto` |
+| `triton_max_batch_size` | Here setting to 64 |
+| `tokenizer_dir` | The path to the tokenizer for the model. In this example, the path should be set to `${HF_LLAMA_MODEL}`|
+| `tokenizer_type` | The type of the tokenizer for the model, `t5`, `auto` and `llama` are supported. In this example, the type should be set to `llama` |
 | `postprocessing_instance_count` | Here setting to 1 |
 
 #### Run the following command to prepare postprocessing config.pbtxt
@@ -125,7 +123,7 @@ python3 tools/fill_template.py -i llama_ifb/postprocessing/config.pbtxt tokenize
 
 | Name | Description
 | :----------------------: | :-----------------------------: |
-| `triton_max_batch_size` | Here setting to 4 |
+| `triton_max_batch_size` | Here setting to 64 |
 
 #### Run the following command to prepare ensemble config.pbtxt
 ```
