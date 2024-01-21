@@ -54,6 +54,9 @@ cp -r all_models/inflight_batcher_llm/ensemble triton_model_repo/
 cp -r all_models/inflight_batcher_llm/preprocessing triton_model_repo/
 cp -r all_models/inflight_batcher_llm/postprocessing triton_model_repo/
 cp -r all_models/inflight_batcher_llm/tensorrt_llm triton_model_repo/
+
+# Copy the TRT engine to triton_model_repo/tensorrt_llm/1/
+cp tensorrt_llm/examples/gpt/engines/fp16/4-gpu/* triton_model_repo/tensorrt_llm/1
 ```
 
 ### 6. Modify the model configuration
