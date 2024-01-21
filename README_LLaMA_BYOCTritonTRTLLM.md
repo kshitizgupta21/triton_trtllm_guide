@@ -37,7 +37,7 @@ python build.py --model_dir ${HF_LLAMA_MODEL} \
                 --use_gemm_plugin float16 \
                 --output_dir /tmp/llama/7B/trt_engines/fp16/4-gpu/ \
                 --paged_kv_cache \
-                --max_batch_size 64
+                --max_batch_size 64 \
                 --world_size 4 \
                 --tp_size 4 \
                 --pp_size 1
