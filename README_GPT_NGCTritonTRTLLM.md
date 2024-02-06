@@ -3,7 +3,7 @@
 ### 1. Pull down Triton TRT-LLM backend container from NGC
 
 ```
-docker pull nvcr.io/nvidia/tritonserver:23.12-pyt-python-py3
+docker pull nvcr.io/nvidia/tritonserver:24.01-pyt-python-py3
 ```
 
 ### 2. Run this docker container
