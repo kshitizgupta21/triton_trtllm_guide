@@ -8,4 +8,7 @@ Installation and usage guide for Triton TRT-LLM v0.7.1
 ## LLaMa
 Use [README_LLaMA_BYOCTritonTRTLLM](https://github.com/kshitizgupta21/triton_trtllm_guide/blob/main/README_LLaMA_BYOCTritonTRTLLM.md) for LLaMa model
 
-**Currently, Build container method has been tested succesfully and is recommended**
+## Falcon-40B
+Use [Falcon_BYOCTritonTRTLLM.md](https://github.com/kshitizgupta21/triton_trtllm_guide/blob/main/Falcon_BYOCTritonTRTLLM.md) guide to deploy Falcon-40B on 8 A100 GPU
+
+
