@@ -97,6 +97,7 @@ Optional
 | `exclude_input_in_output` | Set to `true` to only return completion tokens in a response. Set to `false` to return the prompt tokens concatenated with the generated tokens  |
 
 #### Run the following command to prepare tensorrt_llm model config.pbtxt
+remove the dynamic batching lines from the config.pbtxt
 
 ```
 python3 tools/fill_template.py -i triton_model_repo/tensorrt_llm/config.pbtxt triton_max_batch_size:128,decoupled_mode:False,engine_dir:/tmp/falcon/rw-1b/trt_engines/fp16/1-gpu/,batching_strategy:inflight_batching
