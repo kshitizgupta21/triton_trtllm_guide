@@ -2,7 +2,7 @@
 
 ### 1. Get TRTLLM Backend repo
 ```
-git clone https://github.com/triton-inference-server/tensorrtllm_backend.git -b v0.7.1
+git clone https://github.com/triton-inference-server/tensorrtllm_backend.git -b v0.9.0
 cd tensorrtllm_backend
 git lfs install
 git submodule update --init --recursive
@@ -25,22 +25,20 @@ cd tensorrt_llm/examples/llama
 
 # Download weights from HuggingFace Transformers
 git lfs install
-git clone https://huggingface.co/meta-llama/Llama-2-7b-hf
+git clone https://<username>:<access token>@huggingface.co/meta-llama/Llama-2-7b-hf
+
+# Convert checkpoint from hf format to trt-llm format
+export HF_LLAMA_MODEL=$(pwd)/Llama-2-7b-hf/
+python convert_checkpoint.py --model_dir ${HF_LLAMA_MODEL} \
+            --output_dir ./tllm_checkpoint_4gpu_tp4 \
+            --dtype float16 \
+            --tp_size 4
+
 
 # Build TensorRT engines
-export HF_LLAMA_MODEL=$(pwd)/Llama-2-7b-hf/
-python build.py --model_dir ${HF_LLAMA_MODEL} \
-                --dtype float16 \
-                --remove_input_padding \
-                --use_gpt_attention_plugin float16 \
-                --enable_context_fmha \
-                --use_gemm_plugin float16 \
-                --output_dir /tmp/llama/7B/trt_engines/fp16/4-gpu/ \
-                --paged_kv_cache \
-                --max_batch_size 64 \
-                --world_size 4 \
-                --tp_size 4 \
-                --pp_size 1
+trtllm-build --checkpoint_dir ./tllm_checkpoint_4gpu_tp4 \
+	            --output_dir /tmp/llama/7B/trt_engines/fp16/4-gpu/ \
+	            --gemm_plugin float16
 ```
 
 ### 5. Create model repository
